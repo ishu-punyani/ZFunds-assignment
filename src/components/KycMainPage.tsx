@@ -2,9 +2,10 @@ import { useState } from "react";
 import Documents from "./Documents";
 import PersonalDetails from "./PersonalDetails";
 import Button from "@mui/material/Button";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Grid2, Typography } from "@mui/material";
 import Declaration from "./Declaration";
 import ReviewDetails from "./ReviewDetails";
+import NavBar from "./NavBar";
 
 const KycMainPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -31,33 +32,83 @@ const KycMainPage = () => {
   };
 
   const handleEditStep = (step: number) => {
-    console.log("clicked", step);
     setCurrentStep(step);
   };
   const handleNextStep = () => {
-    console.log('clicked');
+    console.log("clicked");
     setCurrentStep((prevStep) => prevStep + 1);
   };
-
-  console.log('currentStep', currentStep);
+  const handlePrevStep = () => {
+    setCurrentStep((prevStep) => prevStep - 1);
+  };
 
   return (
     <Grid className="container">
       {currentStep == 0 && (
-        <>
-          <Typography variant="h1" sx={{ fontSize: '2rem'}}>
-            Welcome to ZFunds! Before moving forward, please proceed with your
-            KYC by clicking the button below.
-          </Typography>
-          <Button variant="contained" onClick={handleNextStep}>Complete KYC</Button>
-        </>
+        <Grid2
+          display={"flex"}
+          flexDirection={"column"}
+          spacing={2}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <NavBar currentStep={currentStep} handlePrevStep={handlePrevStep} />
+          <Grid2
+            margin={2}
+            width={"60%"}
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"center"}
+            mt={3}
+          >
+            <Typography
+              variant="h1"
+              sx={{ fontSize: "2rem", textAlign: "center" }}
+            >
+              Welcome to ZFunds! Before moving forward, please proceed with your
+              KYC by clicking the button below.
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={handleNextStep}
+              sx={{ maxWidth: "200px", marginTop: "30px" }}
+            >
+              Complete KYC
+            </Button>
+          </Grid2>
+        </Grid2>
       )}
       {currentStep == 1 && (
-        <PersonalDetails client:visible handleNextStep={handleNextStep} />
+        <PersonalDetails
+          client:visible
+          currentStep={currentStep}
+          handlePrevStep={handlePrevStep}
+          handleNextStep={handleNextStep}
+        />
       )}
-      {currentStep == 2 && <Documents client:visible handleNextStep={handleNextStep} />}
-      {currentStep == 3 && <Declaration client:visible handleNextStep={handleNextStep} />}
-      {currentStep == 4 && <ReviewDetails client:visible />}
+      {currentStep == 2 && (
+        <Documents
+          client:visible
+          currentStep={currentStep}
+          handlePrevStep={handlePrevStep}
+          handleNextStep={handleNextStep}
+        />
+      )}
+      {currentStep == 3 && (
+        <Declaration
+          client:visible
+          currentStep={currentStep}
+          handlePrevStep={handlePrevStep}
+          handleNextStep={handleNextStep}
+        />
+      )}
+      {currentStep == 4 && (
+        <ReviewDetails
+          client:visible
+          currentStep={currentStep}
+          handlePrevStep={handlePrevStep}
+        />
+      )}
     </Grid>
   );
 };
