@@ -8,6 +8,7 @@ import ReviewDetails from "./ReviewDetails";
 import NavBar from "./NavBar";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
+import FormSubmitted from "./FormSubmitted";
 
 const KycMainPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -65,14 +66,10 @@ const KycMainPage = () => {
     validationSchema: validationSchemas[currentStep - 1],
     validateOnBlur: true,
     onSubmit: (values : any) => {
-      console.log("KYC Data Submitted:", values);
-      alert("KYC Completed Successfully!");
+      setCurrentStep((prev) => prev + 1);
+      formik.resetForm()
     },
   });
-
-  const handleSubmit = () => {
-    formik.handleSubmit();
-  };
 
   const handleNextStep = async () => {
     const errors = await formik.validateForm();
@@ -169,6 +166,14 @@ const KycMainPage = () => {
         <ReviewDetails
           client:visible
           formik={formik}
+          currentStep={currentStep}
+          handlePrevStep={handlePrevStep}
+          setCurrentStep={setCurrentStep}
+        />
+      )}
+      {currentStep == 5 && (
+        <FormSubmitted
+          client:visible
           currentStep={currentStep}
           handlePrevStep={handlePrevStep}
           setCurrentStep={setCurrentStep}

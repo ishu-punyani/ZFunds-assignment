@@ -14,7 +14,12 @@ import React, { useState } from "react";
 import NavBar from "./NavBar";
 import EditIcon from "@mui/icons-material/Edit";
 
-const ReviewDetails = ({ currentStep, handlePrevStep, setCurrentStep, formik }: any) => {
+const ReviewDetails = ({
+  currentStep,
+  handlePrevStep,
+  setCurrentStep,
+  formik,
+}: any) => {
   const [tnc, setTnc] = useState(false);
   return (
     <Grid2 container display={"flex"} width={"100vw"} justifyContent={"center"}>
@@ -130,14 +135,21 @@ const ReviewDetails = ({ currentStep, handlePrevStep, setCurrentStep, formik }: 
             control={
               <Checkbox
                 checked={tnc}
-                onChange={(e : any) => setTnc(e.target.checked)}
+                onChange={(e: any) => setTnc(e.target.checked)}
                 color="primary"
               />
             }
             label=" I agree to the Terms & Conditions"
           />
         </Box>
-        <Button variant="contained" sx={{width: '300px'}} disabled={!tnc}>Submit KYC</Button>
+        <Button
+          variant="contained"
+          sx={{ width: "300px" }}
+          disabled={!tnc}
+          onClick={formik.handleSubmit}
+        >
+          Submit KYC
+        </Button>
       </Grid2>
     </Grid2>
   );
