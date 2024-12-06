@@ -2,10 +2,8 @@ import { Box, Button, Grid, Grid2, Switch, Typography } from "@mui/material";
 import React, { useState } from "react";
 import NavBar from "./NavBar";
 
-const Declaration = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
-  const [indianCitizen, setIndianCitizen] = useState(false);
-  const [indianTaxResident, setIndianTaxResident] = useState(false);
-  const [notPoliticallyExposed, setNotPoliticallyExposed] = useState(false);
+const Declaration = ({ currentStep, handlePrevStep, handleNextStep, formik }: any) => {
+  const {values, setFieldValue} = formik;
   return (
     <Grid2 container display={"flex"} width={"100vw"} justifyContent={"center"}>
       <NavBar currentStep={currentStep} handlePrevStep={handlePrevStep} />
@@ -38,12 +36,20 @@ const Declaration = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
           >
             <Typography variant="body1">Indian Citizen</Typography>
             <Switch
-              checked={indianCitizen}
-              onChange={(e: any) => setIndianCitizen(!indianCitizen)}
-              name="toggle"
+              checked={values.declaration.indianCitizen}
+              onChange={(e : any) =>
+                setFieldValue("declaration.indianCitizen", e.target.checked)
+              }
+              onBlur={formik.handleBlur}
+              name="declaration.indianCitizen"
               color="primary"
             />
           </Box>
+          {formik.touched.declaration?.indianCitizen && formik.errors.declaration?.indianCitizen && (
+              <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+                {formik.errors.declaration.indianCitizen}
+              </Typography>
+            )}
           <Box
             display="flex"
             justifyContent="space-between"
@@ -51,12 +57,20 @@ const Declaration = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
           >
             <Typography variant="body1">Indian Tax Resident</Typography>
             <Switch
-              checked={indianTaxResident}
-              onChange={(e: any) => setIndianTaxResident(!indianTaxResident)}
-              name="toggle"
+              checked={values.declaration.indianTaxResident}
+              onChange={(e : any) =>
+                setFieldValue("declaration.indianTaxResident", e.target.checked)
+              }
+              onBlur={formik.handleBlur}
+              name="declaration.indianTaxResident"
               color="primary"
             />
           </Box>
+          {formik.touched.declaration?.indianTaxResident && formik.errors.declaration?.indianTaxResident && (
+              <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+                {formik.errors.declaration.indianTaxResident}
+              </Typography>
+            )}
           <Box
             display="flex"
             justifyContent="space-between"
@@ -64,12 +78,20 @@ const Declaration = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
           >
             <Typography variant="body1">Not Politically Exposed</Typography>
             <Switch
-              checked={notPoliticallyExposed}
-              onChange={(e: any) => setNotPoliticallyExposed(e.target.checked)}
-              name="toggle"
+              checked={values.declaration.notPoliticallyExposed}
+              onChange={(e : any) =>
+                setFieldValue("declaration.notPoliticallyExposed", e.target.checked)
+              }
+              onBlur={formik.handleBlur}
+              name="declaration.notPoliticallyExposed"
               color="primary"
             />
           </Box>
+          {formik.touched.declaration?.notPoliticallyExposed && formik.errors.declaration?.notPoliticallyExposed && (
+              <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+                {formik.errors.declaration.notPoliticallyExposed}
+              </Typography>
+            )}
           <Button variant="contained" onClick={handleNextStep}>
             Next
           </Button>

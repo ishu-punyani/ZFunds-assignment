@@ -1,13 +1,9 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, Grid2, Radio, RadioGroup, TextField, Typography} from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import NavBar from "./NavBar";
 
-const PersonalDetails = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
-  const [name, setName] = useState("");
-  const [maritalStatus, setMaritalStatus] = useState("Single");
-  const [fatherName, setFatherName] = useState("");
-  const [email, setEmail] = useState("");
-  const [annualIncome, setAnnualIncome] = useState("Below 1 Lakh");
+const PersonalDetails = ({ currentStep, handlePrevStep, handleNextStep, formik }: any) => {
+    const { values, errors, touched, setFieldValue } = formik;
   return (
     <Grid2 container display={"flex"} width={"100vw"} justifyContent={"center"}>
       <NavBar currentStep={currentStep} handlePrevStep={handlePrevStep} />
@@ -33,9 +29,9 @@ const PersonalDetails = ({ currentStep, handlePrevStep, handleNextStep }: any) =
             <FormLabel id="marital-radio">Marital Status</FormLabel>
             <RadioGroup
               aria-labelledby="marital-radio"
-              name="maritalStatus"
-              value={maritalStatus}
-              onChange={(e: any) => setMaritalStatus(e.target.value)}
+              name="personalDetails.maritalStatus"
+              value={values?.personalDetails.maritalStatus}
+              onChange={(e: any) => setFieldValue('personalDetails.maritalStatus', e.target.value)}
               row
             >
               <Box
@@ -59,44 +55,53 @@ const PersonalDetails = ({ currentStep, handlePrevStep, handleNextStep }: any) =
             </RadioGroup>
           </FormControl>
           <TextField
-            name="name"
+            name="personalDetails.name"
             label="Name"
             size="small"
-            value={name}
-            onChange={(e: any) => setName(e.target.value)}
+            value={values?.personalDetails.name}
+            onChange={(e: any) => setFieldValue("personalDetails.name", e.target.value)}
+            onBlur={formik.handleBlur}
+            error={touched.personalDetails?.name && Boolean(errors.personalDetails?.name)}
+            helperText={touched.personalDetails?.name && errors.personalDetails?.name}
           />
           <TextField
-            name="father name"
+            name="personalDetails.fatherName"
             label="Father's Name"
             size="small"
-            value={fatherName}
-            onChange={(e: any) => setFatherName(e.target.value)}
+            value={values?.personalDetails.fatherName}
+            onChange={(e: any) => setFieldValue("personalDetails.fatherName", e.target.value)}
+            onBlur={formik.handleBlur}
+            error={touched.personalDetails?.fatherName && Boolean(errors.personalDetails?.fatherName)}
+            helperText={touched.personalDetails?.fatherName && errors.personalDetails?.fatherName}
           />
           <TextField
-            name="email"
+            name="personalDetails.email"
             label="Email"
             size="small"
-            value={email}
-            onChange={(e: any) => setEmail(e.target.value)}
+            value={values?.personalDetails.email}
+            onChange={(e: any) => setFieldValue("personalDetails.email", e.target.value)}
+            onBlur={formik.handleBlur}
+            error={touched.personalDetails?.email && Boolean(errors.personalDetails?.email)}
+            helperText={touched.personalDetails?.email && errors.personalDetails?.email}
           />
           <Grid2>
-            <Button onClick={() => setEmail((str) => str + "@gmail.com")}>
+            <Button onClick={() => setFieldValue("personalDetails.email", values?.personalDetails.email + "@gmail.com")}>
               @gmail.com
             </Button>
-            <Button onClick={() => setEmail((str) => str + "@yahoo.in")}>
+            <Button onClick={() => setFieldValue("personalDetails.email", values?.personalDetails.email + "@yahoo.in")}>
               @yahoo.in
             </Button>
-            <Button onClick={() => setEmail((str) => str + "@rediffmail.com")}>
-              @rediffmail.com
+            <Button onClick={() => setFieldValue("personalDetails.email", values?.personalDetails.email + "@outlook.com")}>
+              @outlook.com
             </Button>
           </Grid2>
           <FormControl>
             <FormLabel id="annualIncome-radio">Annual Income</FormLabel>
             <RadioGroup
               aria-labelledby="annualIncome-radio"
-              name="annualIncome"
-              value={annualIncome}
-              onChange={(e: any) => setAnnualIncome(e.target.value)}
+              name="personalDetails.annualIncome"
+              value={values?.personalDetails.annualIncome}
+              onChange={(e: any) => setFieldValue("personalDetails.annualIncome", e.target.value)}
             >
               <FormControlLabel
                 value="Below 1 Lakh"

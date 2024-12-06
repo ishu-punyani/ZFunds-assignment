@@ -5,7 +5,6 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
 function NavBar({ currentStep, handlePrevStep }: any) {
-  console.log("navbar step", currentStep);
   return (
     <Grid
       display={"flex"}

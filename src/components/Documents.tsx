@@ -1,19 +1,23 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Avatar, Box, Button, Grid, Typography } from "@mui/material";
 import { useState } from "react";
 import NavBar from "./NavBar";
 
-const Documents = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
-  const [panCard, setPanCard] = useState<File | null>(null);
-  const [signature, setSignature] = useState<File | null>(null);
+const Documents = ({
+  currentStep,
+  handlePrevStep,
+  handleNextStep,
+  formik,
+}: any) => {
+  const { values, setFieldValue } = formik;
 
-  const handlePanCardChange = (e: any) => {
-    const selectedFile = e.target.files[0];
-    setPanCard(selectedFile);
+  const handleFileChange = (fieldName: string) => (e: any) => {
+    const selectedFile = e.target.files?.[0] || null;
+    if (selectedFile) {
+      const url = URL.createObjectURL(selectedFile);
+      setFieldValue(fieldName, url);
+    }
   };
-  const handleSignatureChange = (e: any) => {
-    const selectedFile = e.target.files[0];
-    setSignature(selectedFile);
-  };
+  
   return (
     <Grid container display="flex" width="100vw" justifyContent="center">
       <NavBar currentStep={currentStep} handlePrevStep={handlePrevStep} />
@@ -22,7 +26,7 @@ const Documents = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
         spacing={2}
         flexDirection="column"
         margin={2}
-        width="30%"
+        width="40%"
         alignItems="center"
       >
         <Grid item>
@@ -36,7 +40,7 @@ const Documents = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
         </Grid>
 
         <Grid container direction="column" gap={2} mt={3}>
-          <Grid container justifyContent="space-between" alignItems="center">
+          <Grid container justifyContent="space-evenly" alignItems="flex-start">
             <Grid item xs={12} sm={6}>
               <Typography variant="h6" gutterBottom>
                 PAN Card
@@ -50,9 +54,8 @@ const Documents = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
               xs={12}
               sm={6}
               display="flex"
-              flexDirection="column"
-              justifyContent="flex-start"
-              alignItems="flex-start"
+              justifyContent="flex-end"
+              flexWrap={'wrap'}
             >
               <Button
                 variant="contained"
@@ -65,17 +68,33 @@ const Documents = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
                 }}
               >
                 Upload PAN Card
-                <input type="file" hidden onChange={handlePanCardChange} />
+                <input
+                  type="file"
+                  hidden
+                  onChange={handleFileChange("documents.panCard")}
+                  onBlur={formik.handleBlur}
+                />
               </Button>
-              {panCard && (
-                <Typography variant="body2" sx={{ marginTop: 1 }}>
-                  Selected File: {panCard.name}
-                </Typography>
+              {values?.documents?.panCard && (
+                <Box ml={2}>
+                  <Typography variant="body2">Uploaded Photo:</Typography>
+                  <Avatar
+                    src={values?.documents?.panCard}
+                    alt="PAN preview"
+                    sx={{ width: 100, height: 100, borderRadius: 0 }}
+                  />
+                </Box>
               )}
             </Grid>
+            {formik.touched.documents?.panCard &&
+              formik.errors.documents?.panCard && (
+                <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+                  {formik.errors.documents.panCard}
+                </Typography>
+              )}
           </Grid>
 
-          <Grid container justifyContent="space-between" alignItems="center">
+          <Grid container justifyContent="space-evenly" alignItems="flex-start">
             <Grid item xs={12} sm={6}>
               <Typography variant="h6" gutterBottom>
                 Signature
@@ -90,9 +109,8 @@ const Documents = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
               xs={12}
               sm={6}
               display="flex"
-              flexDirection="column"
-              justifyContent="flex-start"
-              alignItems="flex-start"
+              justifyContent="flex-end"
+              flexWrap={'wrap'}
             >
               <Button
                 variant="contained"
@@ -105,14 +123,30 @@ const Documents = ({ currentStep, handlePrevStep, handleNextStep }: any) => {
                 }}
               >
                 Upload Signature
-                <input type="file" hidden onChange={handleSignatureChange} />
+                <input
+                  type="file"
+                  hidden
+                  onChange={handleFileChange("documents.signature")}
+                  onBlur={formik.handleBlur}
+                />
               </Button>
-              {signature && (
-                <Typography variant="body2" sx={{ marginTop: 1 }}>
-                  Selected File: {signature.name}
-                </Typography>
+              {values?.documents?.signature && (
+                <Box ml={2}>
+                  <Typography variant="body2">Uploaded Photo:</Typography>
+                  <Avatar
+                    src={values?.documents?.signature}
+                    alt="PAN preview"
+                    sx={{ width: 100, height: 100, borderRadius: 0 }}
+                  />
+                </Box>
               )}
             </Grid>
+            {formik.touched.documents?.signature &&
+              formik.errors.documents?.signature && (
+                <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+                  {formik.errors.documents.signature}
+                </Typography>
+              )}
           </Grid>
 
           <Button variant="contained" onClick={handleNextStep}>

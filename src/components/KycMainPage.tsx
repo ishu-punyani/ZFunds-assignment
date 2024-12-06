@@ -6,37 +6,97 @@ import { Grid, Grid2, Typography } from "@mui/material";
 import Declaration from "./Declaration";
 import ReviewDetails from "./ReviewDetails";
 import NavBar from "./NavBar";
+import { useFormik } from "formik";
+import * as Yup from 'yup';
 
 const KycMainPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [kycData, setKycData] = useState({
-    personalDetails: {
-      maritalStatus: "Single",
-      fatherName: "",
-      email: "",
-      annualIncome: "Below 1 Lakh",
+
+  const validationSchemas = [
+    Yup.object({
+      personalDetails: Yup.object({
+        fatherName: Yup.string().required("Father's name is required"),
+        name: Yup.string().required("Name is required"),
+        email: Yup.string().email("Invalid email").required("Email is required"),
+      }),
+    }),
+    Yup.object({
+      documents: Yup.object({
+        panCard: Yup.string().required("PAN Card is required"),
+        signature: Yup.string().required("Signature is required"),
+      }),
+    }),
+    Yup.object({
+      declaration: Yup.object({
+        indianCitizen: Yup.boolean()
+          .oneOf([true], "Must be an Indian citizen")
+          .required("Required"),
+        indianTaxResident: Yup.boolean()
+          .oneOf([true], "Must be an Indian tax resident")
+          .required("Required"),
+        notPoliticallyExposed: Yup.boolean()
+          .oneOf([true], "Cannot be politically exposed")
+          .required("Required"),
+      }),
+    }),
+  ];
+
+  
+
+  const formik = useFormik({
+    initialValues: {
+      personalDetails: {
+        name: "",
+        maritalStatus: "Single",
+        fatherName: "",
+        email: "",
+        annualIncome: "Below 1 Lakh",
+      },
+      documents: {
+        panCard: "",
+        signature: "",
+      },
+      declaration: {
+        indianCitizen: false,
+        indianTaxResident: false,
+        notPoliticallyExposed: false,
+      },
     },
-    documents: {
-      panCard: "",
-      signature: "",
-    },
-    declaration: {
-      indianCitizen: false,
-      indianTaxResident: false,
-      notPoliticallyExposed: false,
+    validationSchema: validationSchemas[currentStep - 1],
+    validateOnBlur: true,
+    onSubmit: (values : any) => {
+      console.log("KYC Data Submitted:", values);
+      alert("KYC Completed Successfully!");
     },
   });
 
   const handleSubmit = () => {
-    console.log("KYC Completed", kycData);
+    formik.handleSubmit();
   };
 
-  const handleEditStep = (step: number) => {
-    setCurrentStep(step);
-  };
-  const handleNextStep = () => {
-    console.log("clicked");
-    setCurrentStep((prevStep) => prevStep + 1);
+  const handleNextStep = async () => {
+    const errors = await formik.validateForm();
+    formik.setTouched({
+        personalDetails: {
+          name: true,
+          fatherName: true,
+          email: true,
+        },
+        documents: {
+          panCard: true,
+          signature: true,
+        },
+        declaration: {
+          indianCitizen: true,
+          indianTaxResident: true,
+          notPoliticallyExposed: true,
+        },
+      });
+    if (Object.keys(errors).length === 0) {
+      setCurrentStep((prev) => prev + 1);
+    } else {
+      console.log("Validation Errors:", errors);
+    }
   };
   const handlePrevStep = () => {
     setCurrentStep((prevStep) => prevStep - 1);
@@ -81,6 +141,7 @@ const KycMainPage = () => {
       {currentStep == 1 && (
         <PersonalDetails
           client:visible
+          formik={formik}
           currentStep={currentStep}
           handlePrevStep={handlePrevStep}
           handleNextStep={handleNextStep}
@@ -89,6 +150,7 @@ const KycMainPage = () => {
       {currentStep == 2 && (
         <Documents
           client:visible
+          formik={formik}
           currentStep={currentStep}
           handlePrevStep={handlePrevStep}
           handleNextStep={handleNextStep}
@@ -97,6 +159,7 @@ const KycMainPage = () => {
       {currentStep == 3 && (
         <Declaration
           client:visible
+          formik={formik}
           currentStep={currentStep}
           handlePrevStep={handlePrevStep}
           handleNextStep={handleNextStep}
@@ -105,8 +168,10 @@ const KycMainPage = () => {
       {currentStep == 4 && (
         <ReviewDetails
           client:visible
+          formik={formik}
           currentStep={currentStep}
           handlePrevStep={handlePrevStep}
+          setCurrentStep={setCurrentStep}
         />
       )}
     </Grid>
