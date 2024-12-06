@@ -7,8 +7,9 @@ import Declaration from "./Declaration";
 import ReviewDetails from "./ReviewDetails";
 import NavBar from "./NavBar";
 import { useFormik } from "formik";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import FormSubmitted from "./FormSubmitted";
+import axios from "axios";
 
 const KycMainPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -18,7 +19,9 @@ const KycMainPage = () => {
       personalDetails: Yup.object({
         fatherName: Yup.string().required("Father's name is required"),
         name: Yup.string().required("Name is required"),
-        email: Yup.string().email("Invalid email").required("Email is required"),
+        email: Yup.string()
+          .email("Invalid email")
+          .required("Email is required"),
       }),
     }),
     Yup.object({
@@ -42,8 +45,6 @@ const KycMainPage = () => {
     }),
   ];
 
-  
-
   const formik = useFormik({
     initialValues: {
       personalDetails: {
@@ -65,36 +66,52 @@ const KycMainPage = () => {
     },
     validationSchema: validationSchemas[currentStep - 1],
     validateOnBlur: true,
-    onSubmit: (values : any) => {
+    onSubmit: (values: any) => {
       setCurrentStep((prev) => prev + 1);
-      formik.resetForm()
+      formik.resetForm();
     },
   });
 
   const handleNextStep = async () => {
+    // Validate the form
     const errors = await formik.validateForm();
     formik.setTouched({
-        personalDetails: {
-          name: true,
-          fatherName: true,
-          email: true,
-        },
-        documents: {
-          panCard: true,
-          signature: true,
-        },
-        declaration: {
-          indianCitizen: true,
-          indianTaxResident: true,
-          notPoliticallyExposed: true,
-        },
-      });
-    if (Object.keys(errors).length === 0) {
-      setCurrentStep((prev) => prev + 1);
+      personalDetails: {
+        name: true,
+        fatherName: true,
+        email: true,
+      },
+      documents: {
+        panCard: true,
+        signature: true,
+      },
+      declaration: {
+        indianCitizen: true,
+        indianTaxResident: true,
+        notPoliticallyExposed: true,
+      },
+    });
+    if (currentStep == 0) setCurrentStep((prev) => prev + 1);
+    else if (Object.keys(errors).length === 0) {
+      try {
+        // API call
+        const response = await axios.post(
+          "http://localhost:5000/saveKYC",
+          formik.values
+        );
+        console.log("API Response:", response.data);
+        setCurrentStep((prev) => prev + 1);
+      } catch (error: any) {
+        console.error(
+          "Error saving data:",
+          error.response?.data || error.message
+        );
+      }
     } else {
       console.log("Validation Errors:", errors);
     }
   };
+
   const handlePrevStep = () => {
     setCurrentStep((prevStep) => prevStep - 1);
   };
