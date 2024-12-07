@@ -1,8 +1,8 @@
-import { Box, Button, Grid, Grid2, Switch, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Grid2, Switch, Typography } from "@mui/material";
 import React, { useState } from "react";
 import NavBar from "./NavBar";
 
-const Declaration = ({ currentStep, handlePrevStep, handleNextStep, formik }: any) => {
+const Declaration = ({ currentStep, handlePrevStep, handleNextStep, formik, loading, error }: any) => {
   const {values, setFieldValue} = formik;
   return (
     <Grid2 container display={"flex"} width={"100vw"} justifyContent={"center"}>
@@ -46,7 +46,7 @@ const Declaration = ({ currentStep, handlePrevStep, handleNextStep, formik }: an
             />
           </Box>
           {formik.touched.declaration?.indianCitizen && formik.errors.declaration?.indianCitizen && (
-              <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+              <Typography variant="body2" color="error">
                 {formik.errors.declaration.indianCitizen}
               </Typography>
             )}
@@ -67,7 +67,7 @@ const Declaration = ({ currentStep, handlePrevStep, handleNextStep, formik }: an
             />
           </Box>
           {formik.touched.declaration?.indianTaxResident && formik.errors.declaration?.indianTaxResident && (
-              <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+              <Typography variant="body2" color="error">
                 {formik.errors.declaration.indianTaxResident}
               </Typography>
             )}
@@ -88,13 +88,20 @@ const Declaration = ({ currentStep, handlePrevStep, handleNextStep, formik }: an
             />
           </Box>
           {formik.touched.declaration?.notPoliticallyExposed && formik.errors.declaration?.notPoliticallyExposed && (
-              <Typography variant="body2" color="error" sx={{ marginTop: 1 }}>
+              <Typography variant="body2" color="error">
                 {formik.errors.declaration.notPoliticallyExposed}
               </Typography>
             )}
-          <Button variant="contained" onClick={handleNextStep}>
+          <Button 
+            variant="contained" 
+            onClick={handleNextStep} 
+            disabled={loading} // Disable the button while loading
+            startIcon={loading ? <CircularProgress size={20} /> : null}>
             Next
           </Button>
+          {error && (
+            <Typography variant="body1" color="error">{error}</Typography>
+          )}
         </Grid2>
       </Grid2>
     </Grid2>

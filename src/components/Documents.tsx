@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Grid, Typography } from "@mui/material";
+import { Avatar, Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { useState } from "react";
 import NavBar from "./NavBar";
 
@@ -7,6 +7,8 @@ const Documents = ({
   handlePrevStep,
   handleNextStep,
   formik,
+  loading, 
+  error
 }: any) => {
   const { values, setFieldValue } = formik;
 
@@ -17,7 +19,7 @@ const Documents = ({
       setFieldValue(fieldName, url);
     }
   };
-  
+
   return (
     <Grid container display="flex" width="100vw" justifyContent="center">
       <NavBar currentStep={currentStep} handlePrevStep={handlePrevStep} />
@@ -135,7 +137,7 @@ const Documents = ({
                   <Typography variant="body2">Uploaded Photo:</Typography>
                   <Avatar
                     src={values?.documents?.signature}
-                    alt="PAN preview"
+                    alt="Signature preview"
                     sx={{ width: 100, height: 100, borderRadius: 0 }}
                   />
                 </Box>
@@ -149,9 +151,16 @@ const Documents = ({
               )}
           </Grid>
 
-          <Button variant="contained" onClick={handleNextStep}>
+          <Button 
+            variant="contained" 
+            onClick={handleNextStep} 
+            disabled={loading} // Disable the button while loading
+            startIcon={loading ? <CircularProgress size={20} /> : null}>
             Next
           </Button>
+          {error && (
+            <Typography variant="body1" color="error">{error}</Typography>
+          )}
         </Grid>
       </Grid>
     </Grid>

@@ -1,8 +1,8 @@
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, Grid2, Radio, RadioGroup, TextField, Typography} from "@mui/material";
+import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, Grid, Grid2, Radio, RadioGroup, TextField, Typography} from "@mui/material";
 import React from "react";
 import NavBar from "./NavBar";
 
-const PersonalDetails = ({ currentStep, handlePrevStep, handleNextStep, formik }: any) => {
+const PersonalDetails = ({ currentStep, handlePrevStep, handleNextStep, formik, loading, error }: any) => {
     const { values, errors, touched, setFieldValue } = formik;
   return (
     <Grid2 container display={"flex"} width={"100vw"} justifyContent={"center"}>
@@ -130,9 +130,16 @@ const PersonalDetails = ({ currentStep, handlePrevStep, handleNextStep, formik }
               />
             </RadioGroup>
           </FormControl>
-          <Button variant="contained" onClick={handleNextStep}>
+          <Button 
+            variant="contained" 
+            onClick={handleNextStep} 
+            disabled={loading} // Disable the button while loading
+            startIcon={loading ? <CircularProgress size={20} /> : null}>
             Next
           </Button>
+          {error && (
+            <Typography variant="body1" color="error">{error}</Typography>
+          )}
         </Grid2>
       </Grid2>
     </Grid2>

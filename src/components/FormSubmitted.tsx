@@ -20,22 +20,20 @@ function FormSubmitted({ currentStep, handlePrevStep, setCurrentStep }: any) {
   }, [setCurrentStep]);
 
   return (
-    <div>
+    <>
       <NavBar currentStep={currentStep} handlePrevStep={handlePrevStep} />
       <Grid2
-        margin={2}
+        margin={'30px 300px'}
         width={"60%"}
-        display={"flex"}
-        flexDirection={"column"}
-        alignItems={"center"}
-        mt={3}
+        display={'flex'}
+        justifyContent={"center"}
       >
         <Typography variant="h1" sx={{ fontSize: "2rem", textAlign: "center" }}>
           KYC Completed Successfully! You will be redirected to the Homepage in{" "}
           {countdown} seconds...
         </Typography>
       </Grid2>
-    </div>
+    </>
   );
 }
 

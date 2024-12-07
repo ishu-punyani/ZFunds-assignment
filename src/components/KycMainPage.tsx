@@ -13,6 +13,8 @@ import axios from "axios";
 
 const KycMainPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const validationSchemas = [
     Yup.object({
@@ -93,6 +95,8 @@ const KycMainPage = () => {
     });
     if (currentStep == 0) setCurrentStep((prev) => prev + 1);
     else if (Object.keys(errors).length === 0) {
+      setLoading(true); //Loading
+      setApiError('');
       try {
         // API call
         const response = await axios.post(
@@ -102,10 +106,13 @@ const KycMainPage = () => {
         console.log("API Response:", response.data);
         setCurrentStep((prev) => prev + 1);
       } catch (error: any) {
+        setApiError(`Error saving data: ${error.response?.data || error.message}`)
         console.error(
           "Error saving data:",
           error.response?.data || error.message
         );
+      } finally {
+        setLoading(false);
       }
     } else {
       console.log("Validation Errors:", errors);
@@ -159,6 +166,8 @@ const KycMainPage = () => {
           currentStep={currentStep}
           handlePrevStep={handlePrevStep}
           handleNextStep={handleNextStep}
+          loading={loading}
+          error={apiError}
         />
       )}
       {currentStep == 2 && (
@@ -168,6 +177,8 @@ const KycMainPage = () => {
           currentStep={currentStep}
           handlePrevStep={handlePrevStep}
           handleNextStep={handleNextStep}
+          loading={loading}
+          error={apiError}
         />
       )}
       {currentStep == 3 && (
@@ -177,6 +188,8 @@ const KycMainPage = () => {
           currentStep={currentStep}
           handlePrevStep={handlePrevStep}
           handleNextStep={handleNextStep}
+          loading={loading}
+          error={apiError}
         />
       )}
       {currentStep == 4 && (

@@ -13,7 +13,7 @@ function NavBar({ currentStep, handlePrevStep }: any) {
       sx={{ height: "70px", width: "100vw", backgroundColor: "lightblue" }}
     >
       <Grid item>
-        {currentStep > 0 ? (
+        {currentStep > 0 && currentStep < 5 ? (
           <Grid>
             <IconButton onClick={handlePrevStep} sx={{ color: "black" }}>
               <ArrowBackIosNewIcon /> Back
