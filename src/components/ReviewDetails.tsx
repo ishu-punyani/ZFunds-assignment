@@ -61,6 +61,32 @@ const ReviewDetails = ({
           }}
         >
           <Grid display={"flex"} justifyContent={"space-between"}>
+            <Typography variant="h5">User Details</Typography>
+          </Grid>
+          <Typography variant="body1">
+            PAN CARD: INDIAN CITIZEN
+          </Typography>
+          <Typography variant="body1">
+            Date of Birth: DD/MM/YYYY
+          </Typography>
+          <Typography variant="body1" color="primary">
+            Note: You cannot edit above details as they are already verfied through Digilocker.
+          </Typography>
+        </Box>
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"flex-start"}
+          p={3}
+          mb={3}
+          style={{
+            border: "1px solid black",
+            borderRadius: "10px",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.7)",
+            width: "250px",
+          }}
+        >
+          <Grid display={"flex"} justifyContent={"space-between"}>
             <Typography variant="h5">Personal Details</Typography>
             <IconButton
               sx={{
